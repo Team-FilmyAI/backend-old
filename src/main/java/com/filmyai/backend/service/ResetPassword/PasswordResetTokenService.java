@@ -42,6 +42,7 @@ public class PasswordResetTokenService {
         -> new UsernameNotFoundException("User not found with email: " + email));
 
         String token = UUID.randomUUID().toString();
+
         PasswordResetToken prt = PasswordResetToken.builder()
                 .user(user)
                 .token(token)

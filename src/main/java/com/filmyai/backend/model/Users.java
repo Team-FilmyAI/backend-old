@@ -3,6 +3,7 @@ package com.filmyai.backend.model;
 
 import com.filmyai.backend.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDateTime;
 
