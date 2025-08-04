@@ -33,7 +33,7 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Builder.Default
+    //@Builder.Default
     private boolean enabled = true;
 
     private LocalDateTime createdAt;

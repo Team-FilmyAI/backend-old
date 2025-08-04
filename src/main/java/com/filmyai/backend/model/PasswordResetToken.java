@@ -30,7 +30,7 @@ public class PasswordResetToken {
     private LocalDateTime expiresAt;
 
     @Column(nullable = false)
-    @Builder.Default
+    //@Builder.Default
     private boolean used = false;
 
     @Column(name = "issued_at", nullable = false, updatable = false)

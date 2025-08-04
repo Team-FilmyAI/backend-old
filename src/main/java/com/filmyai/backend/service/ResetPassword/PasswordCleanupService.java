@@ -28,5 +28,4 @@ public class PasswordCleanupService {
             log.info("Deleted {} password histories older than 6 months", oldEntries.size());
         }
     }
-
 }
