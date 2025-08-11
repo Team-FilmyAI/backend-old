@@ -40,7 +40,7 @@ public class SecurityFilterChainConfig {
                                "/swagger-resources/**",
                                "/webjars/**"
                        ).permitAll()
-                       .requestMatchers("filmyai/login","filmyai/signup", "filmyai/countries/**","filmyai/states/**","filmyai/cities/**")
+                       .requestMatchers("filmyai/login","filmyai/signup", "filmyai/countries/**","filmyai/states/**","filmyai/cities/**","filmyai/eyeColors/**","filmyai/hairColors/**","filmyai/ethnicities/**")
                        .permitAll()
                        .anyRequest().authenticated())
                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
