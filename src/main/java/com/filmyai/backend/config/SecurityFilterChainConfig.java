@@ -16,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.Customizer;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +36,7 @@ public class SecurityFilterChainConfig {
     @Bean
     public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
        return  http.csrf(AbstractHttpConfigurer::disable)
+       .cors(Customizer.withDefaults())
                .authorizeHttpRequests(request -> request
                        .requestMatchers(
                                "/swagger-ui.html",
@@ -40,7 +46,7 @@ public class SecurityFilterChainConfig {
                                "/swagger-resources/**",
                                "/webjars/**"
                        ).permitAll()
-                       .requestMatchers("filmyai/login","filmyai/signup")
+                       .requestMatchers("filmyai/login","filmyai/signup","filmyai/forgot-password","filmyai/Reset-Password")
                        .permitAll()
                        .anyRequest().authenticated())
                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -69,6 +75,17 @@ public class SecurityFilterChainConfig {
         return config.getAuthenticationManager();
     }
 
-
+    
+@Bean
+public CorsFilter corsFilter() {
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // <-- allow your React app
+    config.setAllowedHeaders(Arrays.asList("*"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // allow needed HTTP methods
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+}
 
 }

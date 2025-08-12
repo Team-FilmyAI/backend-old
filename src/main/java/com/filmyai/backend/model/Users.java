@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class Users {
 
     @Id
@@ -32,6 +33,7 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    //@Builder.Default
     private boolean enabled = true;
 
     private LocalDateTime createdAt;
