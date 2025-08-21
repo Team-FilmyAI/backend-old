@@ -1,5 +1,6 @@
 package com.filmyai.backend.config.jwt;
 
+import com.filmyai.backend.service.SecurityService.CustomeUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -21,11 +22,22 @@ public class JwtTokenService {
         this.jwtEncoder = jwtEncoder;
     }
 
+
+
     public String generateToken(Authentication authentication) {
         var scope = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
+
+        Object principal = authentication.getPrincipal();
+
+        String firstName = "";
+        String lastName = "";
+        if (principal instanceof CustomeUserDetails userDetails) {
+            firstName = userDetails.getFirstName();
+            lastName = userDetails.getLastName();
+        }
 
         var claims = JwtClaimsSet.builder()
                 .issuer("Self")
@@ -33,6 +45,8 @@ public class JwtTokenService {
                 .expiresAt(Instant.now().plus(30, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("Role",scope)
+                .claim("firstName", firstName)
+                .claim("lastName", lastName)
                 .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

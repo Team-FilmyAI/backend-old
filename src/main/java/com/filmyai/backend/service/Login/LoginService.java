@@ -15,9 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
 
+
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenService;
     private final UserRepository usersRepository;
+
+
 
 
     public LoginService(AuthenticationManager authenticationManager, JwtTokenService jwtTokenService, UserRepository usersRepository) {
