@@ -2,8 +2,9 @@ package com.filmyai.backend.service.SignUp;
 
 import com.filmyai.backend.dto.SignUp.SignUpRequestDto;
 import com.filmyai.backend.dto.SignUp.SignUpResponseDto;
-import com.filmyai.backend.enums.Role;
-import com.filmyai.backend.model.Users;
+import com.filmyai.backend.model.Role;
+import com.filmyai.backend.model.User;
+import com.filmyai.backend.repository.RoleRepository;
 import com.filmyai.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 public class SignUpService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SignUpService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SignUpService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -38,7 +41,7 @@ public class SignUpService {
 
 
     public SignUpResponseDto registerUser(SignUpRequestDto requestDto) {
-        if (userRepository.findUsersByEmail(requestDto.getEmail()).isPresent()) {
+        if (userRepository.findUserByEmail(requestDto.getEmail()).isPresent()) {
             throw new RuntimeException("Email is already in use");
         }
 
@@ -48,13 +51,16 @@ public class SignUpService {
         }
 
 
-        Users newUser = Users.builder()
+        Role role = roleRepository.findById(requestDto.getRoleId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role id: " + requestDto.getRoleId()));
+
+        User newUser = User.builder()
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
-                .enabled(true)
-                .role(Role.valueOf(requestDto.getRole()))
+                .profileName(requestDto.getProfile_name())
+                .role(role)
                 .build();
 
         userRepository.save(newUser);

@@ -1,6 +1,6 @@
 package com.filmyai.backend.service.SecurityService;
 
-import com.filmyai.backend.model.Users;
+import com.filmyai.backend.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,15 +11,15 @@ import java.util.List;
 
 public class CustomeUserDetails implements UserDetails {
 
-    private final Users user;
+    private final User user;
 
-    public CustomeUserDetails(Users user) {
+    public CustomeUserDetails(User user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().getRoleId().toString()));
     }
 
     @Override

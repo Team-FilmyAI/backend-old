@@ -3,7 +3,7 @@ package com.filmyai.backend.service.ResetPassword;
 import com.filmyai.backend.dto.PasswordReset.ResetPasswordRequestDTO;
 import com.filmyai.backend.model.PasswordHistory;
 import com.filmyai.backend.model.PasswordResetToken;
-import com.filmyai.backend.model.Users;
+import com.filmyai.backend.model.User;
 import com.filmyai.backend.repository.PasswordHistoryRepository;
 import com.filmyai.backend.repository.PasswordResetTokenRepository;
 import com.filmyai.backend.repository.UserRepository;
@@ -45,7 +45,7 @@ public class PasswordResetTokenService {
 
     public void sendResetLink(String email) {
 
-        Users user = userRepository.findUsersByEmail(email).orElseThrow(()
+        User user = userRepository.findUserByEmail(email).orElseThrow(()
         -> new UsernameNotFoundException("User not found with email: " + email));
 
         String token = UUID.randomUUID().toString();
@@ -67,7 +67,7 @@ public class PasswordResetTokenService {
 
     }
 
-    private SimpleMailMessage getSimpleMailMessage(String email, Users user, String resetLink) {
+    private SimpleMailMessage getSimpleMailMessage(String email, User user, String resetLink) {
         String emailBody = String.format("""
         Hi %s,
     
@@ -92,7 +92,7 @@ public class PasswordResetTokenService {
         return mailMessage;
     }
 
-    public Users validateToken(String token) {
+    public User validateToken(String token) {
         PasswordResetToken prt = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid or Expired Token"));
         if (prt.isUsed() || prt.getExpiresAt().isBefore(LocalDateTime.now())) {
@@ -114,7 +114,7 @@ public class PasswordResetTokenService {
         passwordResetTokenRepository.delete(prt);
     }
 
-    public Boolean Reset_Password(Users user, ResetPasswordRequestDTO resetPasswordRequestDTO ) {
+    public Boolean Reset_Password(User user, ResetPasswordRequestDTO resetPasswordRequestDTO ) {
 
 //        String newPassword = resetPasswordRequestDTO.New_Password();
 //        String confirmPassword = resetPasswordRequestDTO.Confirm_Password();

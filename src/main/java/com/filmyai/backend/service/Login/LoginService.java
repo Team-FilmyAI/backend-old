@@ -3,7 +3,7 @@ package com.filmyai.backend.service.Login;
 import com.filmyai.backend.config.jwt.JwtTokenService;
 import com.filmyai.backend.dto.Login.LoginRequestDto;
 import com.filmyai.backend.dto.Login.LoginResponseDto;
-import com.filmyai.backend.model.Users;
+import com.filmyai.backend.model.User;
 import com.filmyai.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,7 +38,7 @@ public class LoginService {
 //            throw new BadCredentialsException("Invalid email or password");
 //        }
 
-        Users user = usersRepository.findUsersByEmail(loginRequest.email())
+        User user = usersRepository.findUserByEmail(loginRequest.email())
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
 
