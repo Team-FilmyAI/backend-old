@@ -36,7 +36,6 @@ public class SecurityFilterChainConfig {
     @Bean
     public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
        return  http.csrf(AbstractHttpConfigurer::disable)
-       .cors(Customizer.withDefaults())
                .authorizeHttpRequests(request -> request
                        .requestMatchers(
                                "/swagger-ui.html",
@@ -46,7 +45,7 @@ public class SecurityFilterChainConfig {
                                "/swagger-resources/**",
                                "/webjars/**"
                        ).permitAll()
-                       .requestMatchers("filmyai/login","filmyai/signup","filmyai/forgot-password","filmyai/Reset-Password")
+                       .requestMatchers("filmyai/login","filmyai/signup","filmyai/forgot-password","filmyai/Reset-Password","filmyai/countries/**","filmyai/states/**","filmyai/cities/**")
                        .permitAll()
                        .anyRequest().authenticated())
                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -75,7 +74,7 @@ public class SecurityFilterChainConfig {
         return config.getAuthenticationManager();
     }
 
-    
+
 @Bean
 public CorsFilter corsFilter() {
     CorsConfiguration config = new CorsConfiguration();
