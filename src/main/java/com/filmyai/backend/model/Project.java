@@ -3,6 +3,7 @@ package com.filmyai.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -58,5 +59,8 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", foreignKey = @ForeignKey(name = "fk_projects_creator"))
     private User createdBy;
+
+    @OneToMany(mappedBy = "project")
+    private List<Job> jobs;
 
 }

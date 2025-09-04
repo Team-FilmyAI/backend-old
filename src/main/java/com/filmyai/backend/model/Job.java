@@ -38,4 +38,6 @@ public class Job {
     @Column(name = "posted_at", nullable = false)
     private LocalDateTime postedAt;
 
+    @OneToOne(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private JobsActor jobActor;
 }
