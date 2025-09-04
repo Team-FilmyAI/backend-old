@@ -16,7 +16,7 @@ public class HairColor {
     @Column(name = "hair_color_id", updatable = false, nullable = false)
     private Long hairColorId;
 
-    @Column(name = "hair_color_name", length = 40, nullable = false)
+    @Column(name = "hair_color_name", nullable = false)
     private String hairColorName;
 
 }

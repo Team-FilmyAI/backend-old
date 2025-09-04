@@ -1,5 +1,6 @@
 package com.filmyai.backend.model;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,3 @@ public class State {
 
     @Column(name = "state_name", length = 100, nullable = false)
     private String stateName;
-
-}

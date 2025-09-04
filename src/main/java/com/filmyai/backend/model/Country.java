@@ -16,7 +16,7 @@ public class Country {
     @Column(name = "country_id", updatable = false, nullable = false)
     private Long countryId;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "country_name", nullable = false, unique = true, length = 100)
     private String countryName;
 
 }
