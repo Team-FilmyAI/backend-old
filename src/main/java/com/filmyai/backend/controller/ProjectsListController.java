@@ -28,4 +28,9 @@ public class ProjectsListController {
         return ResponseEntity.ok(projectDto);
     }
 
+    @GetMapping("/projects/genre/{genreId}")
+    public ResponseEntity<List<ProjectResponseDto>> getProjectsByGenre(@PathVariable Long genreId) {
+        List<ProjectResponseDto> projects = projectsListService.getProjectsByGenre(genreId);
+        return ResponseEntity.ok(projects);
+    }
 }

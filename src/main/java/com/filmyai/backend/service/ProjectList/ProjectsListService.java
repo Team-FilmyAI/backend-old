@@ -26,18 +26,8 @@ public class ProjectsListService {
         List<Project> projects = Optional.ofNullable(projectRepository.findAllWithJobs())
                 .orElse(List.of());
 
-        return projects.stream().map(project -> ProjectResponseDto.builder()
-                        .projectId(project.getProjectId())
-                        .name(project.getName())
-                        .synopsis(project.getSynopsis())
-                        .startDate(project.getStartDate() != null ? project.getStartDate().toString() : null)
-                        .endDate(project.getEndDate() != null ? project.getEndDate().toString() : null)
-                        .genreName(project.getGenre() != null ? project.getGenre().getGenreName() : null)
-                        .createdAt(project.getCreatedAt())
-                        .status(project.getStatus())
-                        .locations(project.getLocations())
-                        .jobs(project.getJobs().stream().map(this::mapJobToDto).collect(Collectors.toList()))
-                        .build())
+        return projects.stream()
+                .map(this::mapProjectToDto)
                 .collect(Collectors.toList());
     }
 
@@ -62,18 +52,6 @@ public class ProjectsListService {
                 .postedAt(job.getPostedAt())
                 .build();
     }
-
-    public Project getProjectById(Long id) {
-        return projectRepository.findByIdWithJobs(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
-    }
-
-    public ProjectResponseDto getProjectDtoById(Long id) {
-        Project project = projectRepository.findByIdWithJobs(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
-        return mapProjectToDto(project);
-    }
-
     private ProjectResponseDto mapProjectToDto(Project project) {
         return ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
@@ -89,5 +67,25 @@ public class ProjectsListService {
                 .build();
     }
 
+
+    public Project getProjectById(Long id) {
+        return projectRepository.findByIdWithJobs(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
+    }
+
+    public ProjectResponseDto getProjectDtoById(Long id) {
+        Project project = projectRepository.findByIdWithJobs(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
+        return mapProjectToDto(project);
+    }
+
+
+    public List<ProjectResponseDto> getProjectsByGenre(Long genreId) {
+        List<Project> projects = projectRepository.findByGenreIdWithJobs(genreId);
+
+        return projects.stream()
+                .map(this::mapProjectToDto)
+                .collect(Collectors.toList());
+    }
 
 }
