@@ -18,49 +18,54 @@ public class Project {
     @Column(name = "project_id", updatable = false, nullable = false)
     private Long projectId;
 
-    @Column(name = "name", length = 255)
-    private String name;
+    @Column(name = "title", length = 255)
+    private String title;
 
-    @Column(name = "synopsis")
+    @Column(name = "genre", columnDefinition = "TEXT[]")
+    private String[] genre;
+    
+    @Column(name = "synopsis", columnDefinition = "TEXT")
     private String synopsis;
 
+    @Column(length = 150)
+    private String category;
+
+    @Column(name = "production_companies", columnDefinition = "TEXT[]")
+    private String[] productionCompanies;
+
+    @Lob
+    @Column(name = "poster")
+    private byte[] poster;
+    
+    @Lob
+    @Column(name = "nda_document")
+    private byte[] ndaDocument;
+    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genre_id", foreignKey = @ForeignKey(name = "fk_projects_genre"))
-    private Genre genre;
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "produced_by", foreignKey = @ForeignKey(name = "fk_projects_producer"))
-    private User producedBy;
+    @JoinColumn(name = "state_id")
+    private State state;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private City city;
+    
+    @Column(name = "shoot_start_date")
+    private LocalDate shootStartDate;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Column(name = "shoot_start_location", length = 255)
+    private String shootStartLocation;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "shoot_end_date")
+    private LocalDate shootEndDate;
+
+    @Column(name = "shoot_end_location", length = 255)
+    private String shootEndLocation;
+
+    @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
-
-    @Column(name = "status", length = 20)
-    private String status;
-
-    @Column(name = "country_id")
-    private Long countryId;
-
-    @Column(name = "state_id")
-    private Long stateId;
-
-    @Column(name = "city_id")
-    private Long cityId;
-
-    @Column(name = "locations")
-    private String locations;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", foreignKey = @ForeignKey(name = "fk_projects_creator"))
-    private User createdBy;
-
-    @OneToMany(mappedBy = "project")
-    private List<Job> jobs;
 
 }
