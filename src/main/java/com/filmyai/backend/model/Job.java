@@ -1,5 +1,7 @@
 package com.filmyai.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.*;
@@ -16,10 +18,6 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id", updatable = false, nullable = false)
     private Long jobId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_jobs_project"))
-    private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_jobs_role"))

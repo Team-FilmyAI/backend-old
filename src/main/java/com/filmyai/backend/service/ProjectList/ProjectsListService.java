@@ -11,8 +11,7 @@ import com.filmyai.backend.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +32,7 @@ public class ProjectsListService {
 
 
     private JobResponseDto mapJobToDto(Job job) {
+        if (job == null) return null;
         JobsActor actor = job.getJobActor();
 
         return JobResponseDto.builder()
@@ -53,25 +53,47 @@ public class ProjectsListService {
                 .build();
     }
     private ProjectResponseDto mapProjectToDto(Project project) {
+        if (project == null) return null;
+
+
+        List<JobResponseDto> jobDtos = project.getJobs() != null
+                ? project.getJobs().stream()
+                .map(this::mapJobToDto)
+                .toList()
+                : List.of();
+
+        List<String> genreNames = project.getGenres() != null
+                ? project.getGenres().stream()
+                .map(g -> g.getGenreName())
+                .toList()
+                : List.of();
+
+        List<String> producers = project.getProducers() != null
+                ? project.getProducers().stream()
+                .map(p -> p.getProductionCompany())
+                .toList()
+                : List.of();
+
+
         return ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
-                .name(project.getName())
+                .title(project.getTitle())
                 .synopsis(project.getSynopsis())
-                .startDate(project.getStartDate() != null ? project.getStartDate().toString() : null)
-                .endDate(project.getEndDate() != null ? project.getEndDate().toString() : null)
-                .genreName(project.getGenre() != null ? project.getGenre().getGenreName() : null)
+                .category(project.getCategory())
+                .poster(project.getPoster() != null ? Base64.getEncoder().encodeToString(project.getPoster()) : null)
+                .ndaDocument(project.getNdaDocument() != null ? Base64.getEncoder().encodeToString(project.getNdaDocument()) : null)
                 .createdAt(project.getCreatedAt())
                 .status(project.getStatus())
-                .locations(project.getLocations())
-                .jobs(project.getJobs().stream().map(this::mapJobToDto).collect(Collectors.toList()))
+                .shootStartLocation(project.getShootStartLocation())
+                .shootEndLocation(project.getShootEndLocation())
+                .shootStartDate(project.getShootStartDate() != null ? project.getShootStartDate().toString() : null)
+                .shootEndDate(project.getShootEndDate() != null ? project.getShootEndDate().toString() : null)
+                .jobs(jobDtos)
+                .genreNames(genreNames)
+                .producers(producers)
                 .build();
     }
 
-
-    public Project getProjectById(Long id) {
-        return projectRepository.findByIdWithJobs(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
-    }
 
     public ProjectResponseDto getProjectDtoById(Long id) {
         Project project = projectRepository.findByIdWithJobs(id)
@@ -81,7 +103,15 @@ public class ProjectsListService {
 
 
     public List<ProjectResponseDto> getProjectsByGenre(Long genreId) {
-        List<Project> projects = projectRepository.findByGenreIdWithJobs(genreId);
+        List<Project> projects = projectRepository.findByGenreWithJobs(genreId);
+
+        return projects.stream()
+                .map(this::mapProjectToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProjectResponseDto> getActiveProjectsByProducer(Long userId) {
+        List<Project> projects = projectRepository.findActiveProjectsByProducer(userId);
 
         return projects.stream()
                 .map(this::mapProjectToDto)

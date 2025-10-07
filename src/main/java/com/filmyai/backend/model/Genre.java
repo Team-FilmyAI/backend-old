@@ -1,5 +1,7 @@
 package com.filmyai.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +22,5 @@ public class Genre {
 
     @Column(name = "genre_name", length = 100, nullable = false)
     private String genreName;
-
-    @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Project> projects;
 
 }

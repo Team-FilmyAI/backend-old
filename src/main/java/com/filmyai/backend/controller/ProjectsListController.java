@@ -33,4 +33,11 @@ public class ProjectsListController {
         List<ProjectResponseDto> projects = projectsListService.getProjectsByGenre(genreId);
         return ResponseEntity.ok(projects);
     }
+
+    @GetMapping("/producers/{userId}/current-projects")
+    public ResponseEntity<List<ProjectResponseDto>> getActiveProjectsByProducer(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(projectsListService.getActiveProjectsByProducer(userId));
+    }
+
 }

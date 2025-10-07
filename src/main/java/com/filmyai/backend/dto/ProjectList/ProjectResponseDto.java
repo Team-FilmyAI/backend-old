@@ -16,15 +16,19 @@ import java.util.List;
 public class ProjectResponseDto {
 
     private Long projectId;
-    private String name;
-    private String posterUrl;
+    private String title;
     private String synopsis;
-    private String startDate;
-    private String endDate;
-    private String genreName;
     private LocalDateTime createdAt;
+    private String category;
+    private String poster;
+    private String ndaDocument;
+    private String shootStartDate;
+    private String shootEndDate;
+    private List<String> genreNames;
+    private List<String> producers;
     private String status;
-    private String locations;
+    private String shootStartLocation;
+    private String shootEndLocation;
 
     private List<JobResponseDto> jobs;
 }

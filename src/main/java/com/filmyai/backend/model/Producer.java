@@ -1,7 +1,12 @@
 package com.filmyai.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data

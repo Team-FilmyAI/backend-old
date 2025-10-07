@@ -9,22 +9,43 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @Query("SELECT p FROM Project p LEFT JOIN FETCH p.jobs j LEFT JOIN FETCH j.role LEFT JOIN FETCH j.jobActor LEFT JOIN FETCH p.genre")
-    List<Project> findAllWithJobs();
 
-    @Query("SELECT p FROM Project p " +
-            "LEFT JOIN FETCH p.jobs j " +
-            "LEFT JOIN FETCH j.role " +
-            "LEFT JOIN FETCH j.jobActor " +
-            "LEFT JOIN FETCH p.genre " +
-            "WHERE p.projectId = :id")
-    Optional<Project> findByIdWithJobs(@Param("id") Long id);
-
+    // 1. All projects with jobs + genres + producers
     @Query("SELECT DISTINCT p FROM Project p " +
             "LEFT JOIN FETCH p.jobs j " +
             "LEFT JOIN FETCH j.role " +
             "LEFT JOIN FETCH j.jobActor " +
-            "LEFT JOIN FETCH p.genre g " +
+            "LEFT JOIN FETCH p.genres g " +
+            "LEFT JOIN FETCH p.producers pr")
+    List<Project> findAllWithJobs();
+
+    // 2. One project by ID with jobs + genres + producers
+    @Query("SELECT DISTINCT p FROM Project p " +
+            "LEFT JOIN FETCH p.jobs j " +
+            "LEFT JOIN FETCH j.role " +
+            "LEFT JOIN FETCH j.jobActor " +
+            "LEFT JOIN FETCH p.genres g " +
+            "LEFT JOIN FETCH p.producers pr " +
+            "WHERE p.projectId = :id")
+    Optional<Project> findByIdWithJobs(@Param("id") Long id);
+
+    // 3. Projects filtered by genre with jobs + genres
+    @Query("SELECT DISTINCT p FROM Project p " +
+            "JOIN p.genres g " +
+            "LEFT JOIN FETCH p.jobs j " +
+            "LEFT JOIN FETCH j.role " +
+            "LEFT JOIN FETCH j.jobActor " +
+            "LEFT JOIN FETCH p.genres " +
             "WHERE g.genreId = :genreId")
-    List<Project> findByGenreIdWithJobs(@Param("genreId") Long genreId);
+    List<Project> findByGenreWithJobs(@Param("genreId") Long genreId);
+
+    // 4. Active projects filtered by producer
+    @Query("SELECT DISTINCT p FROM Project p " +
+            "JOIN p.producers pr " +
+            "LEFT JOIN FETCH p.jobs j " +
+            "LEFT JOIN FETCH j.role " +
+            "LEFT JOIN FETCH j.jobActor " +
+            "LEFT JOIN FETCH p.genres " +
+            "WHERE pr.userId = :userId AND p.status = 'Active'")
+    List<Project> findActiveProjectsByProducer(@Param("userId") Long userId);
 }
