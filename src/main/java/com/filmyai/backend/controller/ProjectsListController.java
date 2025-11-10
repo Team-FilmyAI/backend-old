@@ -3,6 +3,7 @@ package com.filmyai.backend.controller;
 import com.filmyai.backend.dto.ProjectList.ProjectResponseDto;
 import com.filmyai.backend.model.Project;
 import com.filmyai.backend.service.ProjectList.ProjectsListService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/filmyai")
+@SecurityRequirement(name = "bearerAuth")
 public class ProjectsListController {
 
     private final ProjectsListService projectsListService;
